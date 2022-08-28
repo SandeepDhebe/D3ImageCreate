@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import jsPDF from 'jspdf';
+import jsPDF, { AcroFormTextField } from 'jspdf';
 import './ActionLink.css';
 
 const ActionLink = ({props}) => {
@@ -52,15 +52,15 @@ svg.append('rect')
 }
 });
 
-  function handleOnClick() {
+  function generatePDF() {
     var config = {
       filename: 'customFileName',
     };
     //   console.log('image', d3_save_pdf.save(d3.select('svg').node(), config));
     let canvas = document.createElement('canvas');
     //   console.log('d3.select', d3.select('svg').node());
-    canvas.width = 460;
-    canvas.height = 400;
+    canvas.width = props.width + 200;
+    canvas.height = props.height + 200;
     let ctx = canvas.getContext("2d");
     let doc = new jsPDF({ orientation: 'l', unit: 'px' });
     //   var svg1 = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" /></svg>'
@@ -77,6 +77,14 @@ svg.append('rect')
       // console.log(canvas.toDataURL("image/png"));
       doc.setFontSize(11);
       doc.text(5, 10, 'Demo chart');
+      // var textField = new AcroFormTextField();
+      // textField.Rect = [300, 100, 300, 300];
+      // textField.multiline = true;
+      // textField.V = "The quick brown fox ate the lazy mouse The quick brown fox ate the lazy mouse The quick brown fox ate the lazy mouse";
+      // textField.T = "TestTextBox";
+      // doc.addField(textField);
+      doc.text(300,100,'Width: '+ props.width)
+      doc.text(300,110,'Height: '+ props.height)
       doc.addImage(canvas.toDataURL("image/png"), 'PNG', 10, 10);
       doc.save('download.pdf');
     };
@@ -92,7 +100,7 @@ svg.append('rect')
       <div>
         <div id="my_rect"></div>
         <div id="generateButton"className='center'>
-          <button  onClick={handleOnClick} >Generate PDF</button>
+          <button  onClick={generatePDF} >Generate PDF</button>
         </div>
       </div>
     </>
